@@ -137,6 +137,70 @@ def update_hist(year_show, states_to_display):
     newfig = px.histogram(newdata,x="STATE")
     return newfig
 
+
+@app.callback(
+    Output("barChart", "figure"), 
+    [Input("cate-dropdown", "value"), 
+     Input("my-numeric-input", "value")])
+
+def update_bar_chart(cate, limit):
+    data = pd.read_csv(cate)
+    data['count'] = pd.to_numeric(data['count'])
+    
+    newdata = data.nlargest(limit,['count'])
+    catname = newdata.columns[0]
+    fig = px.bar(newdata, x=catname, y="count", barmode="group", height=400)
+    fig.update_layout(
+    title="Top number of H1B submissions by Employers/State from 2011 to 2020",
+    yaxis_title="H1B Filings Count",
+    font=dict(
+        size=8
+    )
+)
+
+    return fig
+
+
+
+#============================================================================#
+
+certified1 = pd.read_csv('certified1.csv')
+certified2 = pd.read_csv('certified2.csv')
+deniedDf = pd.read_csv('deniedDf.csv')
+withdrawnDf = pd.read_csv('withdrawnDf.csv')
+cer_withDf = pd.read_csv('cer_withDf.csv')
+
+frames = [certified1, certified2, deniedDf, withdrawnDf,cer_withDf ]
+
+caseStatusData = pd.concat(frames)
+
+@app.callback(
+    dash.dependencies.Output("unstackedBar", "figure"), 
+    [dash.dependencies.Input("sort_by_dropdown", "value")])
+
+
+def update_unstack_barchart(ctg):
+    if ctg == 'STATE':
+        datadf = caseStatusData.groupby(['STATE', 'CASESTATUS']).size()
+    if ctg == 'EMPLOYER':
+        topEmList = caseStatusData['EMPLOYER'].value_counts()[:50].index.tolist()
+        topEmDf= caseStatusData[caseStatusData['EMPLOYER'].isin(topEmList)]
+        datadf = topEmDf.groupby(['EMPLOYER', 'CASESTATUS']).size()
+    wide_df = datadf.unstack(level=-1)
+    name = wide_df.index
+    fig = px.bar(wide_df, x=name, y= ['CERTIFIED','CERTIFIED - WITHDRAWN','DENIED','WITHDRAWN'], title="H1B Case Status by Employers/States")
+    fig.update_layout(
+    yaxis_title="H1B Filings Count",
+    font=dict(
+        size=8
+    )
+)
+
+    return fig
+
+
+
 server = app.server
+
 if __name__ == '__main__':
     app.run_server(debug=True)
