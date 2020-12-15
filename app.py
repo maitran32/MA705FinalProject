@@ -7,19 +7,18 @@ Created on Wed Dec  9 15:34:11 2020
 
 """
 
-
 import pandas as pd 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-# from dash.dependencies import Input, Output
 import plotly.express as px
 import dash_daq as daq
 
 
-
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(_name_, external_stylesheets=external_stylesheets)
+
+server = app.server
 colors = {
     'background': '#F0F8FF',
     'text': '#00008B'
@@ -136,90 +135,10 @@ app.layout = html.Div([
 
     ])])
         
-@app.callback(
-    dash.dependencies.Output('stateSubmitgraph','figure'),
-    [dash.dependencies.Input('yearDropdown','value'),
-     dash.dependencies.Input('stateDropdown','value')]
-    )
-       
-# Update the histogram
-
-def update_hist(year_show, states_to_display):
-    marketingdata = pd.read_csv('marketingdata.csv', usecols=['EMPLOYER', 'STATE', 'JOB TITLE', 'BASE SALARY', 'STATE', 'SUBMIT YEAR', 'START YEAR'])
-    marketingdata = marketingdata[marketingdata['SUBMIT YEAR'] == int(year_show)]
-    newdata = marketingdata[marketingdata.STATE.isin(states_to_display)]
-    newfig = px.histogram(newdata,x="STATE")
-    return newfig
-
-
-#============================================================================#
-
-
-@app.callback(
-    dash.dependencies.Output("barChart", "figure"), 
-    [dash.dependencies.Input("cate-dropdown", "value"), 
-     dash.dependencies.Input("my-numeric-input", "value")])
-
-def update_bar_chart(cate, limit):
-    data = pd.read_csv(cate)
-    data['count'] = pd.to_numeric(data['count'])
-    
-    newdata = data.nlargest(limit,['count'])
-    catname = newdata.columns[0]
-    fig = px.bar(newdata, x=catname, y="count", barmode="group", height=400)
-    fig.update_layout(
-    title="Top number of H1B submissions by Employers/State from 2011 to 2020",
-    yaxis_title="H1B Filings Count",
-    font=dict(
-        size=8
-    )
-)
-
-    return fig
-
-
-
-#============================================================================#
-
-certified1 = pd.read_csv(os.path.join(os.getcwd(),'certified1.csv'))
-certified2 = pd.read_csv(os.path.join(os.getcwd(),'certified2.csv'))
-deniedDf = pd.read_csv(os.path.join(os.getcwd(),'deniedDf.csv'))
-withdrawnDf = pd.read_csv(os.path.join(os.getcwd(),'withdrawnDf.csv'))
-cer_withDf = pd.read_csv(os.path.join(os.getcwd(),'cer_withDf.csv'))
-
-frames = [certified1, certified2, deniedDf, withdrawnDf,cer_withDf ]
-
-caseStatusData = pd.concat(frames)
-
-@app.callback(
-    dash.dependencies.Output("unstackedBar", "figure"), 
-    [dash.dependencies.Input("sort_by_dropdown", "value")])
-
-
-def update_unstack_barchart(ctg):
-    if ctg == 'STATE':
-        datadf = caseStatusData.groupby(['STATE', 'CASESTATUS']).size()
-    if ctg == 'EMPLOYER':
-        topEmList = caseStatusData['EMPLOYER'].value_counts()[:50].index.tolist()
-        topEmDf= caseStatusData[caseStatusData['EMPLOYER'].isin(topEmList)]
-        datadf = topEmDf.groupby(['EMPLOYER', 'CASESTATUS']).size()
-    wide_df = datadf.unstack(level=-1)
-    name = wide_df.index
-    fig = px.bar(wide_df, x=name, y= ['CERTIFIED','CERTIFIED - WITHDRAWN','DENIED','WITHDRAWN'], title="H1B Case Status by Employers/States")
-    fig.update_layout(
-    yaxis_title="H1B Filings Count",
-    font=dict(
-        size=8
-    )
-)
-
-    return fig
 
 
 
 
 
-server = app.server
-
-if __name__ == '__main__':
+if _name_ == '_main_':
     app.run_server(debug=True)
