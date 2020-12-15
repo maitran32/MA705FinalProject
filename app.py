@@ -12,7 +12,6 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
-import dash_daq as daq
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -98,25 +97,7 @@ app.layout = html.Div([
               style={'display':'inline-block','width':'49%','float':'right'})]),
     html.Br(),
     html.Br(),
-    
-    html.Div([
-      html.Br(),
-             html.Br(),
-            html.Br(),
-       
-    dcc.Graph(id="barChart"),
-    html.P("Select category to display:"),
-    dcc.Dropdown(id="cate-dropdown", 
-                 options=[{'label': 'Employers', 'value': 'employerCount.csv'},
-                                    {'label': 'States', 'value': 'stateCount.csv'}],
-                 value='stateCount.csv'),
-    html.P("Enter number to display (maximum 50):"),
-    daq.NumericInput(
-        id='my-numeric-input',
-        value=50
-    )
-        
-    ],
+  
     style={'width': '49%', 'display': 'inline-block', 'float': 'left'}),
 
     html.Div([
