@@ -15,7 +15,7 @@ import plotly.express as px
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(_name_, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 server = app.server
 colors = {
@@ -121,5 +121,5 @@ app.layout = html.Div([
 
 
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run_server(debug=True)
