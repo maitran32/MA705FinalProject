@@ -122,6 +122,21 @@ app.layout = html.Div([
 
     ])])
 
+@app.callback(
+    dash.dependencies.Output('stateSubmitgraph','figure'),
+    [dash.dependenciesInput('yearDropdown','value'),
+     dash.dependenciesInput('stateDropdown','value')]
+    )
+       
+# Update the histogram
+
+def update_hist(year_show, states_to_display):
+    marketingdata = pd.read_csv('marketingdata.csv', usecols=['EMPLOYER', 'STATE', 'JOB TITLE', 'BASE SALARY', 'STATE', 'SUBMIT YEAR', 'START YEAR'])
+    marketingdata = marketingdata[marketingdata['SUBMIT YEAR'] == int(year_show)]
+    newdata = marketingdata[marketingdata.STATE.isin(states_to_display)]
+    newfig = px.histogram(newdata,x="STATE")
+    return newfig
+
 server = app.server
 if __name__ == '__main__':
     app.run_server(debug=True)
