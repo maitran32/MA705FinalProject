@@ -7,18 +7,15 @@ Created on Wed Dec  9 15:34:11 2020
 
 """
 
+
 import pandas as pd 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+# from dash.dependencies import Input, Output
 import plotly.express as px
-import plotly.figure_factory as ff
-import matplotlib 
-import matplotlib.pyplot as plt
-import numpy as np
-import os
 import dash_daq as daq
+
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -140,9 +137,9 @@ app.layout = html.Div([
     ])])
         
 @app.callback(
-    Output('stateSubmitgraph','figure'),
-    [Input('yearDropdown','value'),
-     Input('stateDropdown','value')]
+    dash.dependencies.Output('stateSubmitgraph','figure'),
+    [dash.dependencies.Input('yearDropdown','value'),
+     dash.dependencies.Input('stateDropdown','value')]
     )
        
 # Update the histogram
@@ -159,9 +156,9 @@ def update_hist(year_show, states_to_display):
 
 
 @app.callback(
-    Output("barChart", "figure"), 
-    [Input("cate-dropdown", "value"), 
-     Input("my-numeric-input", "value")])
+    dash.dependencies.Output("barChart", "figure"), 
+    [dash.dependencies.Input("cate-dropdown", "value"), 
+     dash.dependencies.Input("my-numeric-input", "value")])
 
 def update_bar_chart(cate, limit):
     data = pd.read_csv(cate)
@@ -195,8 +192,8 @@ frames = [certified1, certified2, deniedDf, withdrawnDf,cer_withDf ]
 caseStatusData = pd.concat(frames)
 
 @app.callback(
-    Output("unstackedBar", "figure"), 
-    [Input("sort_by_dropdown", "value")])
+    dash.dependencies.Output("unstackedBar", "figure"), 
+    [dash.dependencies.Input("sort_by_dropdown", "value")])
 
 
 def update_unstack_barchart(ctg):
