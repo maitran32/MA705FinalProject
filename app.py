@@ -139,9 +139,9 @@ def update_hist(year_show, states_to_display):
 
 
 @app.callback(
-    Output("barChart", "figure"), 
-    [Input("cate-dropdown", "value"), 
-     Input("my-numeric-input", "value")])
+    dash.dependencies.Output("barChart", "figure"), 
+    [dash.dependencies.Input("cate-dropdown", "value"), 
+     dash.dependencies.Input("my-numeric-input", "value")])
 
 def update_bar_chart(cate, limit):
     data = pd.read_csv(cate)
