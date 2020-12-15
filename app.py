@@ -18,11 +18,6 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 server = app.server
-colors = {
-    'background': '#F0F8FF',
-    'text': '#00008B'
-}
-app.config['suppress_callback_exceptions'] = True
 
 marketingdata = pd.read_csv('marketingdata.csv', usecols=['EMPLOYER', 'STATE', 'JOB TITLE', 'BASE SALARY', 'STATE', 'SUBMIT YEAR', 'START YEAR'])
 #create a histogram for distribution of H1B in all states over the year (submit year
