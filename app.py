@@ -99,7 +99,11 @@ app.layout = html.Div([
                  options=[{'label': 'Employers', 'value': 'employerCount.csv'},
                                     {'label': 'States', 'value': 'stateCount.csv'}],
                  value='stateCount.csv'),
-    html.P("Enter number to display (maximum 50):")],
+    html.P("Enter number to display (maximum 50):"),
+    daq.NumericInput(
+        id='my-numeric-input',
+        value=50
+    )],
     style={'width': '49%', 'display': 'inline-block', 'float': 'left'}),
 
     html.Div([
