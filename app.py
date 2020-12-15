@@ -81,7 +81,7 @@ app.layout = html.Div([
     style={'display':'inline-block','width':'49%','float':'left'})
     ,
     html.Div([
-    html.H4("Histogram of H1B Visa Submissions in Selected States\n Marketing Field Focus"),
+    html.H4("Distribution of H1B Visa Submissions in Selected States (Marketing Field Focus)"),
      
     dcc.Graph(id='stateSubmitgraph',
               style={'display':'inline-block','width':'49%','float':'right'})]),
@@ -135,6 +135,12 @@ def update_hist(year_show, states_to_display):
     marketingdata = marketingdata[marketingdata['SUBMIT YEAR'] == int(year_show)]
     newdata = marketingdata[marketingdata.STATE.isin(states_to_display)]
     newfig = px.histogram(newdata,x="STATE")
+    newfig.update_layout(
+    yaxis_title="H1B Filings Count",
+    font=dict(
+        size=8
+    )
+)
     return newfig
 
 
