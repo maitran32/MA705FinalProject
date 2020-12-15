@@ -124,8 +124,8 @@ app.layout = html.Div([
 
 @app.callback(
     dash.dependencies.Output('stateSubmitgraph','figure'),
-    [dash.dependenciesInput('yearDropdown','value'),
-     dash.dependenciesInput('stateDropdown','value')]
+    [dash.dependencies.Input('yearDropdown','value'),
+     dash.dependencies.Input('stateDropdown','value')]
     )
        
 # Update the histogram
