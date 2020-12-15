@@ -22,9 +22,10 @@ app.layout = html.Div([
     html.Div([
     html.H1('Insights of H1B Data 2011-2020', style={'textAlign': 'center'}),
     dcc.Markdown("""
-                 *The dashboard app was built on data from website h1bdata.info\
+                 *The dashboard app was built on data from website h1bdata.info
+                 
                      By exploring the distribution of H1B filing submissions and their successful status\
-                         through out the time, states, employers, the app could be deployed as an efficient strategy\
+                         through out the years, states, employers, the app could be used as an efficient strategy tool\
                              for foreigners who are in search of jobs/employers that support working visa application in the US,\
                                   especially in marketing field.*
                      
@@ -89,8 +90,11 @@ app.layout = html.Div([
                  """)], 
     style={'display':'inline-block','width':'49%','float':'left'})
     ,
+    html.Br(),
+    html.Br(),
+    html.Br(),
     html.Div([
-    html.H6("Histogram of H1B Submissions in Selected States\n Marketing Field Focus"),
+    html.Div([
      
     dcc.Graph(id='stateSubmitgraph',
               style={'display':'inline-block','width':'49%','float':'right'})]),
@@ -129,7 +133,7 @@ app.layout = html.Div([
     ],
     style={'width': '49%', 'display': 'inline-block', 'float': 'right','borderBottom': 'thin lightgrey solid'})
 
-    ])])
+    ])])]) 
 
 @app.callback(
     dash.dependencies.Output('stateSubmitgraph','figure'),
@@ -145,6 +149,7 @@ def update_hist(year_show, states_to_display):
     newdata = marketingdata[marketingdata.STATE.isin(states_to_display)]
     newfig = px.histogram(newdata,x="STATE")
     newfig.update_layout(
+    title="Distribution of H1B Submissions in Selected States (Marketing Field Focus)",
     yaxis_title="H1B Filings Count",
     font=dict(
         size=8
@@ -166,7 +171,7 @@ def update_bar_chart(cate, limit):
     catname = newdata.columns[0]
     fig = px.bar(newdata, x=catname, y="count", barmode="group", height=400)
     fig.update_layout(
-    title="Top number of H1B submissions by Employers/State from 2011 to 2020",
+    title="Top Employers/State applying for H1B the most from 2011 to 2020",
     yaxis_title="H1B Filings Count",
     font=dict(
         size=8
@@ -203,8 +208,8 @@ def update_unstack_barchart(ctg):
         datadf = topEmDf.groupby(['EMPLOYER', 'CASESTATUS']).size()
     wide_df = datadf.unstack(level=-1)
     name = wide_df.index
-    fig = px.bar(wide_df, x=name, y= ['CERTIFIED','CERTIFIED - WITHDRAWN','DENIED','WITHDRAWN'], title="H1B Case Status by Employers/States")
-    fig.update_layout(
+    fig = px.bar(wide_df, x=name, y= ['CERTIFIED','CERTIFIED - WITHDRAWN','DENIED','WITHDRAWN'])
+    fig.update_layout( title="H1B Case Status by Employers/States",
     yaxis_title="H1B Filings Count",
     font=dict(
         size=8
